@@ -44,7 +44,7 @@ def log_environment_data():
         return
         
     print(f"Data received. Current temperature: {weather['temperature']}°C")
-    print(f"Data received. Current wind: {weather['wind_speed']}")
+    # print(f"Data received. Current wind: {weather['wind_speed']}")
     
     # 2. Load existing memory
     with open(MEMORY_FILE, 'r') as file:
