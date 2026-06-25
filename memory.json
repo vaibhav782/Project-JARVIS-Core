@@ -21,5 +21,23 @@
             },
             "ai_insight": "With the extreme heat index of 35.4\u00b0C and minimal wind, it is advisable to take precautions against heat exhaustion, such as staying hydrated and finding shade or air-conditioning to avoid heat-related illnesses."
         }
+    ],
+    "conversation_history": [
+        {
+            "role": "user",
+            "content": "Hi jarvis, i am vaibhav782"
+        },
+        {
+            "role": "assistant",
+            "content": "Vaibhav782, good morning. I'm JARVIS. What can I assist you with today?"
+        },
+        {
+            "role": "user",
+            "content": "what is my name"
+        },
+        {
+            "role": "assistant",
+            "content": "Your name is Vaibhav782."
+        }
     ]
 }
