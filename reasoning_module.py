@@ -69,5 +69,5 @@ def main():
     print(insight)
     print("-----------------------\n")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

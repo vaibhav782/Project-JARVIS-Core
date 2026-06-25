@@ -9,5 +9,17 @@
             "wind_speed": 10.4,
             "timestamp": "2026-06-24 10:41:05"
         }
+    ],
+    "system_logs": [
+        {
+            "timestamp": "2026-06-25 04:09:52",
+            "module": "Core_Orchestrator",
+            "data_perceived": {
+                "temperature": 35.4,
+                "wind_speed": 3.5,
+                "timestamp": "2026-06-25 04:09:51"
+            },
+            "ai_insight": "With the extreme heat index of 35.4\u00b0C and minimal wind, it is advisable to take precautions against heat exhaustion, such as staying hydrated and finding shade or air-conditioning to avoid heat-related illnesses."
+        }
     ]
 }
