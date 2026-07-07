@@ -6,6 +6,7 @@ from reasoning_module import analyze_weather # We will reuse this, but rename it
 import os
 import requests
 from dotenv import load_dotenv
+from action_module import send_telegram_message
 
 load_dotenv()
 
@@ -57,11 +58,12 @@ def run_daemon():
         memory["autonomous_logs"] = []
 
     cycle = 1
+    alert_active = False # NEW: State management flag
+    
     while True:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp}] Cycle {cycle}: Checking telemetry...")
         
-        # 1. Fetch real data
         device_data = get_device_status("device_a")
         
         if "error" in device_data:
@@ -70,36 +72,48 @@ def run_daemon():
             current_temp = device_data["temperature_c"]
             print(f"[{timestamp}] Temp: {current_temp}°C | Hum: {device_data['humidity_pct']}%")
             
-            # 2. Check against threshold
+            # ANOMALY LOGIC
             if current_temp > TEMP_THRESHOLD_C:
-                print(f"[{timestamp}] *** ANOMALY DETECTED! Temp > {TEMP_THRESHOLD_C}°C. Waking LLM... ***")
-                alert_message = generate_alert(device_data)
-                print(f"[{timestamp}] JARVIS ALERT: {alert_message}")
-                
-                # Log the anomaly
-                memory["autonomous_logs"].append({
-                    "timestamp": timestamp,
-                    "event": "ANOMALY",
-                    "data": device_data,
-                    "alert": alert_message
-                })
+                if not alert_active:
+                    print(f"[{timestamp}] *** ANOMALY DETECTED! Temp > {TEMP_THRESHOLD_C}°C. Waking LLM... ***")
+                    alert_message = generate_alert(device_data)
+                    print(f"[{timestamp}] JARVIS ALERT: {alert_message}")
+                    
+                    print(f"[{timestamp}] Dispatching alert to Telegram...")
+                    send_telegram_message(f"🚨 JARVIS ALERT 🚨\n\n{alert_message}")
+                    print(f"[{timestamp}] Dispatch successful.")
+                    
+                    alert_active = True # ARM the flag so it doesn't spam
+                    
+                    memory["autonomous_logs"].append({
+                        "timestamp": timestamp, "event": "ANOMALY", "data": device_data, "alert": alert_message
+                    })
+                else:
+                    print(f"[{timestamp}] Anomaly ongoing. Alert already dispatched. Holding fire.")
+            
+            # NORMAL LOGIC
             else:
-                # Log normal heartbeat
+                if alert_active:
+                    print(f"[{timestamp}] Temp normalized. Sending All Clear...")
+                    send_telegram_message("✅ JARVIS: Temperature normalized. System stable.")
+                    alert_active = False # REARM the flag
+                else:
+                    print(f"[{timestamp}] Status: NORMAL")
+                
                 memory["autonomous_logs"].append({
-                    "timestamp": timestamp,
-                    "event": "NORMAL",
-                    "data": device_data
+                    "timestamp": timestamp, "event": "NORMAL", "data": device_data
                 })
                 
-                # Truncate logs to prevent infinite memory bloat (keep last 50 cycles)
-                if len(memory["autonomous_logs"]) > 50:
-                    memory["autonomous_logs"] = memory["autonomous_logs"][-50:]
+            # Truncate logs
+            if len(memory["autonomous_logs"]) > 50:
+                memory["autonomous_logs"] = memory["autonomous_logs"][-50:]
                 
         save_memory(memory)
         cycle += 1
-        
-        # 3. Sleep until next cycle
         time.sleep(CHECK_INTERVAL_SECONDS)
+        
+        # # 3. Sleep until next cycle
+        # time.sleep(CHECK_INTERVAL_SECONDS)
 
 if __name__ == "__main__":
     try:

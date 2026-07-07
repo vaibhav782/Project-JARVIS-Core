@@ -80,6 +80,444 @@
                 "status": "ONLINE"
             },
             "alert": "**ALERT: CRITICAL OVERHEATING DETECTED**\n\nDevice: device_a\nTemperature: 32.2\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 08:37:28",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T07:32:46Z",
+                "temperature_c": 33.7,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 33.7\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED TO PREVENT SYSTEM FAILURE**"
+        },
+        {
+            "timestamp": "2026-07-07 08:42:33",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:42:28Z",
+                "temperature_c": 26.6,
+                "humidity_pct": 57.7,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:42:47",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:42:44Z",
+                "temperature_c": 34.2,
+                "humidity_pct": 59.5,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 34.2\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ATTENTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 08:43:49",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:43:34Z",
+                "temperature_c": 26.1,
+                "humidity_pct": 50.7,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:44:49",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:44:41Z",
+                "temperature_c": 26.1,
+                "humidity_pct": 58.5,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:45:50",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:45:48Z",
+                "temperature_c": 31.9,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL OVERHEATING DETECTED**\n\nDevice: Device A\nTemperature: 31.9\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 08:46:52",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:46:38Z",
+                "temperature_c": 33.1,
+                "humidity_pct": 54.3,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT ALERT: DEVICE FAILURE IMMINENT**\n\nDevice: device_a\nTemperature: 33.1\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**INITIATING CONTAINMENT PROTOCOLS**\n\nRecommendations:\n- Verify device_a's cooling system functionality\n- Perform immediate shutdown to prevent further damage\n- Schedule for repair or replacement"
+        },
+        {
+            "timestamp": "2026-07-07 08:47:54",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:47:44Z",
+                "temperature_c": 31.7,
+                "humidity_pct": 52.4,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT SYSTEM ALERT**\n\nDevice: device_a\nTemperature: 31.7\u00b0C\nThreshold Breach: Exceeded safe operating temperature of 30.0\u00b0C\n\n**RECOMMENDED ACTION**\n\nImmediate shutdown of device_a to prevent potential damage. System monitoring will continue to track temperature readings."
+        },
+        {
+            "timestamp": "2026-07-07 08:48:56",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:48:51Z",
+                "temperature_c": 27.7,
+                "humidity_pct": 53.4,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:49:57",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:49:57Z",
+                "temperature_c": 29.9,
+                "humidity_pct": 58.1,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:50:06",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:49:57Z",
+                "temperature_c": 29.9,
+                "humidity_pct": 58.1,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:51:07",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:51:04Z",
+                "temperature_c": 25.6,
+                "humidity_pct": 53.7,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 08:52:07",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:51:54Z",
+                "temperature_c": 32.1,
+                "humidity_pct": 52.2,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT SYSTEM ALERT**\n\nDevice: device_a\nTemperature: 32.1\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**ACTION REQUIRED**\n\nImmediate attention is required to prevent potential hardware damage."
+        },
+        {
+            "timestamp": "2026-07-07 08:53:12",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:53:01Z",
+                "temperature_c": 30.3,
+                "humidity_pct": 52.3,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL OVERHEATING DETECTED**\n\nDevice: device_a\nTemperature: 30.3\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED TO PREVENT DEVICE FAILURE**"
+        },
+        {
+            "timestamp": "2026-07-07 08:54:14",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:54:07Z",
+                "temperature_c": 33.7,
+                "humidity_pct": 54.5,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL SYSTEM FAILURE IMMINENT**\n\nDevice: device_a\nTemperature: 33.7\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**RECOMMENDED ACTION: IMMEDIATELY POWER DOWN DEVICE_A TO PREVENT POTENTIAL DAMAGE**"
+        },
+        {
+            "timestamp": "2026-07-07 08:55:16",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:55:14Z",
+                "temperature_c": 33.5,
+                "humidity_pct": 51.4,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 33.5\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**AUTOMATED RESPONSE INITIATED**\n\nRecommendations:\n- System shutdown initiated for device_a\n- Cooling measures deployed\n- Diagnostic analysis in progress\n\n**MONITORING CONTINUES**"
+        },
+        {
+            "timestamp": "2026-07-07 08:56:18",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:55:31Z",
+                "temperature_c": 34.2,
+                "humidity_pct": 51.6,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL SYSTEM FAILURE IMMINENT**\n\nDevice: device_a\nTemperature: 34.2\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**AUTOMATED RESPONSE INITIATED. PLEASE ATTEND TO DEVICE IMMEDIATELY.**"
+        },
+        {
+            "timestamp": "2026-07-07 08:57:19",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:55:31Z",
+                "temperature_c": 34.2,
+                "humidity_pct": 51.6,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT SYSTEM ALERT**\n\nDevice: device_a\nTemperature: 34.2\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**CRITICAL OVERHEATING DETECTED. IMMEDIATE ACTION REQUIRED.**"
+        },
+        {
+            "timestamp": "2026-07-07 08:59:26",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:55:31Z",
+                "temperature_c": 34.2,
+                "humidity_pct": 51.6,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 34.2\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 09:00:28",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 31.0\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 09:02:29",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 31.0\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 09:03:31",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT SYSTEM ALERT**\n\nDevice device_a: Critical Temperature Breach Detected\n\nCurrent Temperature: 31.0\u00b0C\nSafe Threshold: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 09:04:32",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT ALERT**\n\nDevice: device_a\nTemperature: 31.0\u00b0C\nThreshold Breach: Exceeded safe temperature threshold of 30.0\u00b0C\n\n**RECOMMENDED ACTION**\n\nImmediate shutdown and inspection of device_a is required to prevent potential system failure."
+        },
+        {
+            "timestamp": "2026-07-07 09:05:34",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT ALERT**\n\nDevice: device_a\nTemperature: 31.0\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**CRITICAL OVERHEATING DETECTED. SYSTEM RECOMMENDS IMMEDIATE ACTION TO PREVENT DAMAGE.**"
+        },
+        {
+            "timestamp": "2026-07-07 09:06:36",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL TEMPERATURE BREACH**\n\nDevice: device_a\nTemperature: 31.0\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**AUTOMATED RESPONSE INITIATED. PLEASE CHECK DEVICE IMMEDIATELY.**"
+        },
+        {
+            "timestamp": "2026-07-07 09:07:38",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: Critical Temperature Breach Detected**\n\nDevice: device_a\nTemperature: 31.0\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        },
+        {
+            "timestamp": "2026-07-07 09:08:26",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T08:59:31Z",
+                "temperature_c": 31.0,
+                "humidity_pct": 52.1,
+                "status": "ONLINE"
+            },
+            "alert": "**URGENT SYSTEM ALERT**\n\nDevice 'device_a' has exceeded safe operating temperature threshold.\n\n* Device: device_a\n* Temperature: 31.0\u00b0C\n* Threshold Breached: 30.0\u00b0C\n\n**RECOMMENDED ACTION:** Investigate and rectify device_a to prevent potential system failure."
+        },
+        {
+            "timestamp": "2026-07-07 09:11:30",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:16Z",
+                "temperature_c": 26.8,
+                "humidity_pct": 57.9,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:12:32",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:13:32",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:14:33",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:15:34",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:16:35",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:17:35",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:18:36",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:19:37",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:20:38",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
+        },
+        {
+            "timestamp": "2026-07-07 09:21:38",
+            "event": "NORMAL",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T09:11:32Z",
+                "temperature_c": 27.8,
+                "humidity_pct": 57.0,
+                "status": "ONLINE"
+            }
         }
     ]
 }
