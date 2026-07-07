@@ -67,5 +67,19 @@
             "role": "assistant",
             "content": "Device a is currently online with a temperature of 25.9 degrees Celsius and 54.9% humidity."
         }
+    ],
+    "autonomous_logs": [
+        {
+            "timestamp": "2026-07-07 06:59:55",
+            "event": "ANOMALY",
+            "data": {
+                "device_id": "device_a",
+                "timestamp": "2026-07-07T06:59:45Z",
+                "temperature_c": 32.2,
+                "humidity_pct": 56.0,
+                "status": "ONLINE"
+            },
+            "alert": "**ALERT: CRITICAL OVERHEATING DETECTED**\n\nDevice: device_a\nTemperature: 32.2\u00b0C\nThreshold Breached: 30.0\u00b0C\n\n**IMMEDIATE ACTION REQUIRED**"
+        }
     ]
 }
