@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from memory_module import load_memory, save_memory
 from perception_module import get_weather
 from hardware_module import get_device_status
+from knowledge_module import query_knowledge
 
 load_dotenv()
 
@@ -38,6 +39,23 @@ AVAILABLE_TOOLS = [
                     "device_id": {"type": "string", "description": "The ID of the device, e.g., device_a"}
                 },
                 "required": ["device_id"]
+            }
+        }
+    },
+        {
+        "type": "function",
+        "function": {
+            "name": "query_knowledge",
+            "description": "Search the user's personal documents, notes, and codebases for specific information. Use this if the user asks about the project's architecture, past decisions, or stored files.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query to find in the documents"
+                    }
+                },
+                "required": ["query"]
             }
         }
     }
@@ -100,6 +118,9 @@ def execute_tool(tool_name, arguments):
         return get_weather(arguments.get("location", ""))
     elif tool_name == "get_device_status":
         return get_device_status(arguments.get("device_id", ""))
+    elif tool_name == "query_knowledge":
+        # Search the vector DB
+        return query_knowledge(arguments.get("query", ""))
     return "Tool not found."
 
 def main():

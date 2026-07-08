@@ -3,34 +3,6 @@
     "conversation_history": [
         {
             "role": "tool",
-            "tool_call_id": "csjpdk2yy",
-            "name": "get_device_status",
-            "content": "{\"error\": \"400 Client Error: Bad Request for url: https://api.thingspeak.com/channels/3417788/feeds.json?results=1\"}"
-        },
-        {
-            "role": "assistant",
-            "content": "Device status unavailable."
-        },
-        {
-            "role": "user",
-            "content": "what is the status of device_a"
-        },
-        {
-            "role": "assistant",
-            "content": "",
-            "tool_calls": [
-                {
-                    "id": "skvn2df75",
-                    "type": "function",
-                    "function": {
-                        "name": "get_device_status",
-                        "arguments": "{\"device_id\":\"device_a\"}"
-                    }
-                }
-            ]
-        },
-        {
-            "role": "tool",
             "tool_call_id": "skvn2df75",
             "name": "get_device_status",
             "content": "{\"error\": \"400 Client Error: Bad Request for url: https://api.thingspeak.com/channels/3417788/feeds.json?results=1\"}"
@@ -66,6 +38,34 @@
         {
             "role": "assistant",
             "content": "Device a is currently online with a temperature of 25.9 degrees Celsius and 54.9% humidity."
+        },
+        {
+            "role": "user",
+            "content": "\"What is the deployment architecture of this project?\""
+        },
+        {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+                {
+                    "id": "cej0nthfb",
+                    "type": "function",
+                    "function": {
+                        "name": "query_knowledge",
+                        "arguments": "{\"query\":\"deployment architecture of the project\"}"
+                    }
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "tool_call_id": "cej0nthfb",
+            "name": "query_knowledge",
+            "content": "\"PROJECT JARVIS: Personal AI Operating System\\nAn autonomous, cloud-deployed AI agent that monitors physical IoT hardware, reasons about anomalies using LLMs, and alerts the user via push notifications.\\n\\nArchitecture\\nBrain Layer: Groq API (Llama-3.1-8b-instant) for reasoning and alert generation.\\nPerception Layer: ThingSpeak API integration for real-time ESP32 telemetry.\\nAction Layer: Telegram Bot API for autonomous push notifications.\\nMemory Layer: Local JSON state management for conversation history and system logs.\\nAutonomous Layer: Python background daemon with threshold-based state machine logic.\\nDeployment: Hosted on Render.com (Gunicorn + Flask) with UptimeRobot keep-alive.\\n\\nDirectory Structure\\napp.py - Flask web entry point and background thread spawner.\\njarvis_daemon.py - Autonomous monitoring loop and state machine.\\njarvis_terminal.py - Interactive CLI for direct conversational access.\\nhardware_module.py - IoT device API integration.\\naction_module.py - Outbound Telegram messaging.\\nreasoning_module.py - LLM API integration and prompt engineering.\""
+        },
+        {
+            "role": "assistant",
+            "content": "The deployment architecture of this project is based on a multi-layered system, consisting of a brain layer, perception layer, action layer, memory layer, and autonomous layer. The brain layer uses a large language model (LLM) for reasoning and alert generation, while the perception layer integrates with real-time ESP32 telemetry through the ThingSpeak API. The action layer uses the Telegram Bot API for autonomous push notifications, and the memory layer uses local JSON state management for conversation history and system logs. The autonomous layer is powered by a Python background daemon with threshold-based state machine logic, hosted on Render.com (Gunicorn + Flask) with UptimeRobot keep-alive."
         }
     ],
     "autonomous_logs": [
