@@ -7,6 +7,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # Import your existing modules
 from knowledge_module import query_knowledge
 from hardware_module import get_device_status
+from tts_module import generate_speech
 
 load_dotenv()
 
@@ -27,7 +28,7 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
     voice_path = f"voice_{user.id}.ogg"
     await voice_file.download_to_drive(voice_path)
     
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="JARVIS: Voice received. Transcribing...")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="JARVIS: Voice received. Processing...")
     
     # 2. Transcribe using Groq Whisper
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}"}
@@ -43,9 +44,8 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         return
         
     transcript = response.json()["text"]
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=f"You said: {transcript}")
     
-    # 3. Process with LLM (Simplified for bot, add tool calling later if desired)
+    # 3. Process with LLM
     conversation_history.append({"role": "user", "content": transcript})
     
     llm_headers = {
@@ -65,9 +65,17 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
     
     conversation_history.append({"role": "assistant", "content": ai_text})
     
-    # 4. Send response back to Telegram
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=f"JARVIS: {ai_text}")
-
+    # 4. Convert response to Speech (Custom TTS)
+    audio_path = f"response_{user.id}.mp3"
+    success = generate_speech(ai_text, audio_path)
+    
+    # 5. Send voice memo back to Telegram (or fallback to text)
+    if success:
+        with open(audio_path, 'rb') as audio_file:
+            await context.bot.send_voice(chat_id=update.effective_chat.id, voice=audio_file)
+        os.remove(audio_path)
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=f"JARVIS: {ai_text}")
 def main():
     print("==================================")
     print("    JARVIS TELEGRAM VOICE BOT     ")
