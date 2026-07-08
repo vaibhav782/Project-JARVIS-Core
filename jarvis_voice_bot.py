@@ -82,5 +82,24 @@ def main():
     # Start the bot
     application.run_polling()
 
+# if __name__ == "__main__":
+#     main()
+def start_voice_bot():
+    print("==================================")
+    print("    JARVIS TELEGRAM VOICE BOT     ")
+    print("    Listening for voice memos...  ")
+    print("==================================\n")
+    
+    import asyncio
+    # python-telegram-bot requires an asyncio event loop when run inside a thread
+    asyncio.set_event_loop(asyncio.new_event_loop())
+    
+    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    application.add_handler(MessageHandler(filters.VOICE, handle_voice_message))
+    
+    # run_polling blocks the thread, which is fine since it's a daemon thread
+    application.run_polling()
+
+# Keep this for local testing if you want, but Render will use the function above
 if __name__ == "__main__":
-    main()
+    start_voice_bot()
