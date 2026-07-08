@@ -97,8 +97,10 @@ def start_voice_bot():
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
     application.add_handler(MessageHandler(filters.VOICE, handle_voice_message))
     
-    # run_polling blocks the thread, which is fine since it's a daemon thread
-    application.run_polling()
+    # # run_polling blocks the thread, which is fine since it's a daemon thread
+    # application.run_polling()
+        # stop_signals=None prevents asyncio from crashing inside a background thread
+    application.run_polling(stop_signals=None)
 
 # Keep this for local testing if you want, but Render will use the function above
 if __name__ == "__main__":
