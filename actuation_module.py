@@ -39,7 +39,7 @@ def send_hardware_command(state: int):
 
 if __name__ == "__main__":
     print("Testing Write API... Sending '1' to Field 3...")
-    success = send_hardware_command(1)
+    success = send_hardware_command(0)
     if success:
         print("Check your ESP32 Serial Monitor to see if it received the command.")
     else:
