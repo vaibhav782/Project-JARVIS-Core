@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,25 +14,28 @@ def send_hardware_command(state: int):
         print("[Actuation Error] THINGSPEAK_WRITE_API_KEY is missing from environment.")
         return False
 
-    # Using URL parameters (GET request) is the most reliable way to write to ThingSpeak
     url = f"https://api.thingspeak.com/update.json?api_key={THINGSPEAK_WRITE_API_KEY}&field3={state}"
     
-    try:
-        response = requests.get(url)
-        
-        if response.status_code != 200:
-            print("\n" + "="*50)
-            print("[RAW THINGSPEAK WRITE ERROR]")
-            print(f"Status Code: {response.status_code}")
-            print(f"Response: {response.text}")
-            print("="*50 + "\n")
-            return False
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(url)
             
-        print(f"[Python Log] Successfully wrote '{state}' to ThingSpeak. Entry ID: {response.text}")
-        return True
-    except Exception as e:
-        print(f"[Python Log] Exception during request: {e}")
-        return False
+            # ThingSpeak returns '0' as text if the write is rejected due to rate limits
+            if response.text == "0":
+                print(f"[Actuation Log] ThingSpeak rate limited. Retrying in 5 seconds... (Attempt {attempt + 1})")
+                time.sleep(5)
+                continue
+                
+            print(f"[Python Log] Successfully wrote '{state}' to ThingSpeak. Entry ID: {response.text}")
+            return True
+            
+        except Exception as e:
+            print(f"[Python Log] Exception during request: {e}")
+            time.sleep(2)
+            
+    print("[Actuation Log] Failed to write to ThingSpeak after max retries.")
+    return False
 
 if __name__ == "__main__":
     print("Testing Write API... Sending '1' to Field 3...")
