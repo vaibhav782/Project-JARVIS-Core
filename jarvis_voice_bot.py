@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from web_search_module import search_web
 
 # Import your existing modules
 from knowledge_module import query_knowledge
@@ -45,25 +46,89 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         
     transcript = response.json()["text"]
     
-    # 3. Process with LLM
+    # 3. Process with LLM (with Tool Calling)
     conversation_history.append({"role": "user", "content": transcript})
     
     llm_headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json"
     }
-    system_prompt = {"role": "system", "content": "You are JARVIS. Respond concisely."}
+    system_prompt = {"role": "system", "content": "You are JARVIS. If the user asks about current events, news, or internet information, you MUST use the search_web tool."}
+    
+    # Define the tool schema
+    tools = [
+        {
+            "type": "function",
+            "function": {
+                "name": "search_web",
+                "description": "Search the internet for real-time information, news, or research.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string", "description": "The search query"}
+                    },
+                    "required": ["query"]
+                }
+            }
+        }
+    ]
     
     payload = {
         "model": "llama-3.1-8b-instant",
         "messages": [system_prompt] + conversation_history[-6:],
+        "tools": tools,
         "temperature": 0.6
     }
     
     llm_response = requests.post(GROQ_URL, headers=llm_headers, json=payload)
-    ai_text = llm_response.json()["choices"][0]["message"]["content"]
+    response_data = llm_response.json()["choices"][0]["message"]
+    
+    # Check if LLM decided to search the web
+    if response_data.get("tool_calls"):
+        tool_call = response_data["tool_calls"][0]
+        if tool_call["function"]["name"] == "search_web":
+            import json
+            search_args = json.loads(tool_call["function"]["arguments"])
+            search_query = search_args.get("query", "")
+            
+            # Execute the search
+            search_results = search_web(search_query)
+            
+            # Append the tool call and results to history
+            conversation_history.append(response_data)
+            conversation_history.append({
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "name": "search_web",
+                "content": str(search_results)
+            })
+            
+            # Ask LLM to summarize the search results
+            payload2 = {
+                "model": "llama-3.1-8b-instant",
+                "messages": [system_prompt] + conversation_history[-8:],
+                "temperature": 0.6
+            }
+            llm_response2 = requests.post(GROQ_URL, headers=llm_headers, json=payload2)
+            ai_text = llm_response2.json()["choices"][0]["message"]["content"]
+        else:
+            ai_text = "Tool not supported."
+    else:
+        # Normal response
+        ai_text = response_data["content"]
     
     conversation_history.append({"role": "assistant", "content": ai_text})
+    
+    # payload = {
+    #     "model": "llama-3.1-8b-instant",
+    #     "messages": [system_prompt] + conversation_history[-6:],
+    #     "temperature": 0.6
+    # }
+    
+    # llm_response = requests.post(GROQ_URL, headers=llm_headers, json=payload)
+    # ai_text = llm_response.json()["choices"][0]["message"]["content"]
+    
+    # conversation_history.append({"role": "assistant", "content": ai_text})
     
     # 4. Convert response to Speech (Custom TTS)
     audio_path = f"response_{user.id}.mp3"
