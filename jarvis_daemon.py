@@ -1,11 +1,11 @@
 import time
 import datetime
-from hardware_module import get_device_status
-from memory_module import load_memory, save_memory
-from reasoning_module import analyze_weather # We will reuse this, but rename it conceptually to "generate_alert"
 import os
 import requests
 from dotenv import load_dotenv
+
+from hardware_module import get_device_status
+from memory_module import load_memory, save_memory
 from action_module import send_telegram_message
 from actuation_module import send_hardware_command
 
@@ -59,7 +59,7 @@ def run_daemon():
         memory["autonomous_logs"] = []
 
     cycle = 1
-    alert_active = False # NEW: State management flag
+    alert_active = False
     
     while True:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -73,35 +73,6 @@ def run_daemon():
             current_temp = device_data["temperature_c"]
             print(f"[{timestamp}] Temp: {current_temp}°C | Hum: {device_data['humidity_pct']}%")
             
-            # # ANOMALY LOGIC
-            # if current_temp > TEMP_THRESHOLD_C:
-            #     if not alert_active:
-            #         print(f"[{timestamp}] *** ANOMALY DETECTED! Temp > {TEMP_THRESHOLD_C}°C. Waking LLM... ***")
-            #         alert_message = generate_alert(device_data)
-            #         print(f"[{timestamp}] JARVIS ALERT: {alert_message}")
-                    
-            #         print(f"[{timestamp}] Dispatching alert to Telegram...")
-            #         send_telegram_message(f"🚨 JARVIS ALERT 🚨\n\n{alert_message}")
-            #         print(f"[{timestamp}] Dispatch successful.")
-                    
-            #         alert_active = True # ARM the flag so it doesn't spam
-                    
-            #         memory["autonomous_logs"].append({
-            #             "timestamp": timestamp, "event": "ANOMALY", "data": device_data, "alert": alert_message
-            #         })
-            #     else:
-            #         print(f"[{timestamp}] Anomaly ongoing. Alert already dispatched. Holding fire.")
-            
-            # # NORMAL LOGIC
-            # else:
-            #     if alert_active:
-            #         print(f"[{timestamp}] Temp normalized. Sending All Clear...")
-            #         send_telegram_message("✅ JARVIS: Temperature normalized. System stable.")
-            #         alert_active = False # REARM the flag
-            #     else:
-            #         print(f"[{timestamp}] Status: NORMAL")
-
-                        # ANOMALY LOGIC
             if current_temp > TEMP_THRESHOLD_C:
                 if not alert_active:
                     print(f"[{timestamp}] *** ANOMALY DETECTED! Temp > {TEMP_THRESHOLD_C}°C. Waking LLM... ***")
@@ -111,29 +82,25 @@ def run_daemon():
                     print(f"[{timestamp}] Dispatching alert to Telegram...")
                     send_telegram_message(f"🚨 JARVIS ALERT 🚨\n\n{alert_message}")
                     
-                    # NEW: Autonomously trigger hardware cooling
                     print(f"[{timestamp}] Dispatching command to hardware (LED ON)...")
                     send_hardware_command(1)
                     
-                    alert_active = True # ARM the flag
+                    alert_active = True
                     
                     memory["autonomous_logs"].append({
                         "timestamp": timestamp, "event": "ANOMALY", "data": device_data, "alert": alert_message
                     })
                 else:
                     print(f"[{timestamp}] Anomaly ongoing. Alert already dispatched. Holding fire.")
-            
-            # NORMAL LOGIC
             else:
                 if alert_active:
                     print(f"[{timestamp}] Temp normalized. Sending All Clear...")
                     send_telegram_message("✅ JARVIS: Temperature normalized. System stable.")
                     
-                    # NEW: Autonomously turn off hardware cooling
                     print(f"[{timestamp}] Dispatching command to hardware (LED OFF)...")
                     send_hardware_command(0)
                     
-                    alert_active = False # REARM the flag
+                    alert_active = False
                 else:
                     print(f"[{timestamp}] Status: NORMAL")
                 
@@ -141,16 +108,12 @@ def run_daemon():
                     "timestamp": timestamp, "event": "NORMAL", "data": device_data
                 })
                 
-            # Truncate logs
             if len(memory["autonomous_logs"]) > 50:
                 memory["autonomous_logs"] = memory["autonomous_logs"][-50:]
                 
         save_memory(memory)
         cycle += 1
         time.sleep(CHECK_INTERVAL_SECONDS)
-        
-        # # 3. Sleep until next cycle
-        # time.sleep(CHECK_INTERVAL_SECONDS)
 
 if __name__ == "__main__":
     try:
