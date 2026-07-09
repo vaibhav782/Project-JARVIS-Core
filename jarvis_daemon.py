@@ -7,6 +7,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from action_module import send_telegram_message
+from actuation_module import send_hardware_command
 
 load_dotenv()
 
@@ -72,7 +73,35 @@ def run_daemon():
             current_temp = device_data["temperature_c"]
             print(f"[{timestamp}] Temp: {current_temp}°C | Hum: {device_data['humidity_pct']}%")
             
-            # ANOMALY LOGIC
+            # # ANOMALY LOGIC
+            # if current_temp > TEMP_THRESHOLD_C:
+            #     if not alert_active:
+            #         print(f"[{timestamp}] *** ANOMALY DETECTED! Temp > {TEMP_THRESHOLD_C}°C. Waking LLM... ***")
+            #         alert_message = generate_alert(device_data)
+            #         print(f"[{timestamp}] JARVIS ALERT: {alert_message}")
+                    
+            #         print(f"[{timestamp}] Dispatching alert to Telegram...")
+            #         send_telegram_message(f"🚨 JARVIS ALERT 🚨\n\n{alert_message}")
+            #         print(f"[{timestamp}] Dispatch successful.")
+                    
+            #         alert_active = True # ARM the flag so it doesn't spam
+                    
+            #         memory["autonomous_logs"].append({
+            #             "timestamp": timestamp, "event": "ANOMALY", "data": device_data, "alert": alert_message
+            #         })
+            #     else:
+            #         print(f"[{timestamp}] Anomaly ongoing. Alert already dispatched. Holding fire.")
+            
+            # # NORMAL LOGIC
+            # else:
+            #     if alert_active:
+            #         print(f"[{timestamp}] Temp normalized. Sending All Clear...")
+            #         send_telegram_message("✅ JARVIS: Temperature normalized. System stable.")
+            #         alert_active = False # REARM the flag
+            #     else:
+            #         print(f"[{timestamp}] Status: NORMAL")
+
+                        # ANOMALY LOGIC
             if current_temp > TEMP_THRESHOLD_C:
                 if not alert_active:
                     print(f"[{timestamp}] *** ANOMALY DETECTED! Temp > {TEMP_THRESHOLD_C}°C. Waking LLM... ***")
@@ -81,9 +110,12 @@ def run_daemon():
                     
                     print(f"[{timestamp}] Dispatching alert to Telegram...")
                     send_telegram_message(f"🚨 JARVIS ALERT 🚨\n\n{alert_message}")
-                    print(f"[{timestamp}] Dispatch successful.")
                     
-                    alert_active = True # ARM the flag so it doesn't spam
+                    # NEW: Autonomously trigger hardware cooling
+                    print(f"[{timestamp}] Dispatching command to hardware (LED ON)...")
+                    send_hardware_command(1)
+                    
+                    alert_active = True # ARM the flag
                     
                     memory["autonomous_logs"].append({
                         "timestamp": timestamp, "event": "ANOMALY", "data": device_data, "alert": alert_message
@@ -96,6 +128,11 @@ def run_daemon():
                 if alert_active:
                     print(f"[{timestamp}] Temp normalized. Sending All Clear...")
                     send_telegram_message("✅ JARVIS: Temperature normalized. System stable.")
+                    
+                    # NEW: Autonomously turn off hardware cooling
+                    print(f"[{timestamp}] Dispatching command to hardware (LED OFF)...")
+                    send_hardware_command(0)
+                    
                     alert_active = False # REARM the flag
                 else:
                     print(f"[{timestamp}] Status: NORMAL")
