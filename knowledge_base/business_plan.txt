@@ -1,0 +1,5 @@
+Project JARVIS Business Plan:
+1. Build autonomous IoT monitoring systems for server rooms.
+2. Sell the hardware + software subscription to SMEs for $1000 setup + $50/month.
+3. Use the ESP32 and Groq AI stack to keep costs near zero.
+4. Target market: Data centers, greenhouses, and cold storage warehouses.

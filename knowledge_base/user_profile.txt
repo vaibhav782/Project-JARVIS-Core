@@ -1,0 +1,4 @@
+User Profile:
+Name: Vaibhav.
+Role: Embedded Systems Engineer and Founder.
+Mission: Build an autonomous AI operating system (JARVIS) that can architect systems, write code, research financial strategies, and execute business operations without human intervention. JARVIS is a general-purpose co-founder, not limited to one niche.

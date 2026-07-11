@@ -1,14 +1,17 @@
 import os
+import json
+import asyncio
 import requests
 from dotenv import load_dotenv
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from web_search_module import search_web
+from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 # Import your existing modules
+from web_search_module import search_web
 from knowledge_module import query_knowledge
 from hardware_module import get_device_status
 from tts_module import generate_speech
+from executor_module import write_file
 
 load_dotenv()
 
@@ -17,7 +20,6 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_TRANSCRIBE_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 
-# Simple conversation history for the bot
 conversation_history = []
 
 async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -46,16 +48,16 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         
     transcript = response.json()["text"]
     
-    # 3. Process with LLM (with Tool Calling)
+    # 3. Process with LLM (with Multi-Tool Calling)
     conversation_history.append({"role": "user", "content": transcript})
     
     llm_headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json"
     }
-    system_prompt = {"role": "system", "content": "You are JARVIS. If the user asks about current events, news, or internet information, you MUST use the search_web tool."}
+    system_prompt = {"role": "system", "content": "You are JARVIS, an autonomous AI co-founder. You have access to tools to search the web, query the user's personal knowledge base, and write files/code. Use them proactively to execute tasks."}
     
-    # Define the tool schema
+    # Define the tool schemas
     tools = [
         {
             "type": "function",
@@ -64,10 +66,35 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
                 "description": "Search the internet for real-time information, news, or research.",
                 "parameters": {
                     "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "The search query"}
-                    },
+                    "properties": {"query": {"type": "string", "description": "The search query"}},
                     "required": ["query"]
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "query_knowledge",
+                "description": "Search the user's personal business plans, profiles, and project notes.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {"query": {"type": "string", "description": "The search query to find in personal documents"}},
+                    "required": ["query"]
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "write_file",
+                "description": "Write code or text to a file. Use this when the user asks you to build, write, or create a script, firmware, or document.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "filename": {"type": "string", "description": "The name of the file, e.g., main.py or firmware.ino"},
+                        "content": {"type": "string", "description": "The full text content to write to the file"}
+                    },
+                    "required": ["filename", "content"]
                 }
             }
         }
@@ -83,52 +110,53 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
     llm_response = requests.post(GROQ_URL, headers=llm_headers, json=payload)
     response_data = llm_response.json()["choices"][0]["message"]
     
-    # Check if LLM decided to search the web
+    # Check if LLM decided to use a tool
     if response_data.get("tool_calls"):
         tool_call = response_data["tool_calls"][0]
-        if tool_call["function"]["name"] == "search_web":
-            import json
-            search_args = json.loads(tool_call["function"]["arguments"])
-            search_query = search_args.get("query", "")
+        tool_name = tool_call["function"]["name"]
+        tool_args = json.loads(tool_call["function"]["arguments"])
+        
+        # Execute the correct tool
+        if tool_name == "search_web":
+            tool_result = search_web(tool_args.get("query", ""))
+        elif tool_name == "query_knowledge":
+            tool_result = query_knowledge(tool_args.get("query", ""))
+        elif tool_name == "write_file":
+            filename = tool_args.get("filename", "output.txt")
+            content = tool_args.get("content", "")
+            tool_result = write_file(filename, content)
             
-            # Execute the search
-            search_results = search_web(search_query)
-            
-            # Append the tool call and results to history
-            conversation_history.append(response_data)
-            conversation_history.append({
-                "role": "tool",
-                "tool_call_id": tool_call["id"],
-                "name": "search_web",
-                "content": str(search_results)
-            })
-            
-            # Ask LLM to summarize the search results
-            payload2 = {
-                "model": "llama-3.1-8b-instant",
-                "messages": [system_prompt] + conversation_history[-8:],
-                "temperature": 0.6
-            }
-            llm_response2 = requests.post(GROQ_URL, headers=llm_headers, json=payload2)
-            ai_text = llm_response2.json()["choices"][0]["message"]["content"]
+            # Send the file directly to the user via Telegram
+            try:
+                with open(filename, 'rb') as f:
+                    await context.bot.send_document(chat_id=update.effective_chat.id, document=f, filename=filename)
+            except Exception as e:
+                print(f"[Telegram Error] Failed to send document: {e}")
         else:
-            ai_text = "Tool not supported."
+            tool_result = "Tool not supported."
+            
+        # Append the tool call and results to history
+        conversation_history.append(response_data)
+        conversation_history.append({
+            "role": "tool",
+            "tool_call_id": tool_call["id"],
+            "name": tool_name,
+            "content": str(tool_result)
+        })
+        
+        # Ask LLM to summarize the results
+        payload2 = {
+            "model": "llama-3.1-8b-instant",
+            "messages": [system_prompt] + conversation_history[-8:],
+            "temperature": 0.6
+        }
+        llm_response2 = requests.post(GROQ_URL, headers=llm_headers, json=payload2)
+        ai_text = llm_response2.json()["choices"][0]["message"]["content"]
     else:
         # Normal response
         ai_text = response_data["content"]
     
     conversation_history.append({"role": "assistant", "content": ai_text})
-    
-    # payload = {
-    #     "model": "llama-3.1-8b-instant",
-    #     "messages": [system_prompt] + conversation_history[-6:],
-    #     "temperature": 0.6
-    # }
-    
-    # llm_response = requests.post(GROQ_URL, headers=llm_headers, json=payload)
-    # ai_text = llm_response.json()["choices"][0]["message"]["content"]
-    
-    # conversation_history.append({"role": "assistant", "content": ai_text})
     
     # 4. Convert response to Speech (Custom TTS)
     audio_path = f"response_{user.id}.mp3"
@@ -141,40 +169,21 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         os.remove(audio_path)
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text=f"JARVIS: {ai_text}")
-def main():
-    print("==================================")
-    print("    JARVIS TELEGRAM VOICE BOT     ")
-    print("    Listening for voice memos...  ")
-    print("==================================\n")
-    
-    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
-    
-    # Register handler for voice messages
-    application.add_handler(MessageHandler(filters.VOICE, handle_voice_message))
-    
-    # Start the bot
-    application.run_polling()
 
-# if __name__ == "__main__":
-#     main()
 def start_voice_bot():
     print("==================================")
     print("    JARVIS TELEGRAM VOICE BOT     ")
     print("    Listening for voice memos...  ")
     print("==================================\n")
     
-    import asyncio
     # python-telegram-bot requires an asyncio event loop when run inside a thread
     asyncio.set_event_loop(asyncio.new_event_loop())
     
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
     application.add_handler(MessageHandler(filters.VOICE, handle_voice_message))
     
-    # # run_polling blocks the thread, which is fine since it's a daemon thread
-    # application.run_polling()
-        # stop_signals=None prevents asyncio from crashing inside a background thread
+    # stop_signals=None prevents asyncio from crashing inside a background thread
     application.run_polling(stop_signals=None)
 
-# Keep this for local testing if you want, but Render will use the function above
 if __name__ == "__main__":
     start_voice_bot()
