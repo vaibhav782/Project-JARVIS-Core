@@ -38,10 +38,17 @@ def query_knowledge(query: str, n_results: int = 1):
     return "No relevant knowledge found."
 
 if __name__ == "__main__":
-    # Test ingestion with our existing README
-    print("Ingesting README.md...")
-    print(ingest_document("README.md"))
-    
+    # Auto-ingest all files in the knowledge_base folder
+    folder_path = "knowledge_base"
+    if os.path.exists(folder_path):
+        print(f"Scanning {folder_path} for documents to ingest...")
+        for filename in os.listdir(folder_path):
+            if filename.endswith(".txt"):
+                file_path = os.path.join(folder_path, filename)
+                print(ingest_document(file_path))
+    else:
+        print("knowledge_base folder not found.")
+        
     # Test query
     print("\nQuerying JARVIS knowledge...")
-    print(query_knowledge("What is the architecture of this project?"))
+    print(query_knowledge("What is the business plan?"))
