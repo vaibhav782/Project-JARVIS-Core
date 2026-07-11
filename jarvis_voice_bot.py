@@ -182,8 +182,8 @@ def start_voice_bot():
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
     application.add_handler(MessageHandler(filters.VOICE, handle_voice_message))
     
-    # stop_signals=None prevents asyncio from crashing inside a background thread
-    application.run_polling(stop_signals=None)
+      # drop_pending_updates forces Telegram to drop old connections, preventing rolling-restart conflicts
+    application.run_polling(stop_signals=None, drop_pending_updates=True)
 
 if __name__ == "__main__":
     start_voice_bot()
