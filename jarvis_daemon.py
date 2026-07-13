@@ -8,6 +8,7 @@ from hardware_module import get_device_status
 from memory_module import load_memory, save_memory
 from action_module import send_telegram_message
 from actuation_module import send_hardware_command
+from opportunity_module import find_iot_gigs
 
 load_dotenv()
 
@@ -113,7 +114,19 @@ def run_daemon():
                 
         save_memory(memory)
         cycle += 1
+
+                # --- PROACTIVE INCOME ENGINE ---
+        # Run every 24 hours (86400 seconds). For testing, change to 300 (5 mins).
+        if cycle % 1440 == 0: # 1440 cycles * 60 seconds = 24 hours
+            print(f"[{timestamp}] PROACTIVE MODE: Scanning market for IoT/Python opportunities...")
+            leads = find_iot_gigs()
+            send_telegram_message(f"📊 *Daily Opportunity Report:*\n\n{leads}")
+        
+        save_memory(memory)
+        cycle += 1
         time.sleep(CHECK_INTERVAL_SECONDS)
+
+        # time.sleep(CHECK_INTERVAL_SECONDS)
 
 if __name__ == "__main__":
     try:
