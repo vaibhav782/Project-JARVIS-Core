@@ -3,7 +3,6 @@ import datetime
 
 def find_iot_gigs() -> str:
     """Searches the web for high-value IoT and Python freelance jobs."""
-    # Targeting specific job boards and high-value keywords
     query = "(ESP32 OR IoT OR Python) AND (freelance OR contract OR hiring) -senior -manager"
     
     try:
@@ -19,8 +18,7 @@ def find_iot_gigs() -> str:
                 href = r.get("href", "")
                 body = r.get("body", "No description.")
                 
-                # Format the lead for Telegram
-                formatted_leads.append(f"💡 *{title}*\n\n_{body}_\n\n🔗 [Apply Here]({href})")
+                formatted_leads.append(f"💡 {title}\n\n{body}\n\nApply Here: {href}")
                 
             return "\n\n-------------------\n\n".join(formatted_leads)
             
