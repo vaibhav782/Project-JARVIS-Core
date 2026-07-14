@@ -3,14 +3,16 @@ import datetime
 
 def find_iot_gigs() -> str:
     """Searches the web for high-value IoT and Python freelance jobs."""
-    query = "(ESP32 OR IoT OR Python) AND (freelance OR contract OR hiring) -senior -manager"
+    # Simplified query targeting specific platforms
+    query = "freelance ESP32 developer OR freelance Python IoT OR remote IoT engineer jobs"
     
     try:
         with DDGS() as ddgs:
-            results = list(ddgs.text(query, max_results=3))
+            # region='wt-wt' means global, helps bypass local blocks on cloud servers
+            results = list(ddgs.text(query, max_results=5, region='wt-wt'))
             
             if not results:
-                return "No new opportunities found today."
+                return "No new opportunities found today. DuckDuckGo may have rate-limited the search."
                 
             formatted_leads = []
             for r in results:
