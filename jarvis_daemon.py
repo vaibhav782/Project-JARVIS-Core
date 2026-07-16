@@ -117,8 +117,8 @@ def run_daemon():
 
                 # --- PROACTIVE INCOME ENGINE ---
         # Run every 24 hours (86400 seconds). For testing, change to 300 (5 mins).
-        # if cycle % 1440 == 0: # 1440 cycles * 60 seconds = 24 hours
-        if cycle % 5 == 0: # 1440 cycles * 60 seconds = 24 hours
+        if cycle % 1440 == 0: # 1440 cycles * 60 seconds = 24 hours
+        # if cycle % 5 == 0: # 1440 cycles * 60 seconds = 24 hours
             print(f"[{timestamp}] PROACTIVE MODE: Scanning market for IoT/Python opportunities...")
             leads = find_iot_gigs()
             send_telegram_message(f"📊 *Daily Opportunity Report:*\n\n{leads}")
